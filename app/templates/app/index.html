@@ -1,0 +1,43 @@
+{% load static %} 
+
+{% block body %}
+
+{% include 'app/navigation.html' %}
+
+<style>
+    .container{
+        max-width : 90%;
+
+    }
+
+    .content{
+        text-align : center;
+        position : absolute;
+        bottom : 0;
+        background:rgba(0, 0, 0, 0.5);
+        color : white;
+        height : 30px;
+        width : 91%
+    }
+</style>
+
+    <div class="container-fliud" style="margin-top:1%">
+        <img src="{% static 'images/logo1.png' %}" style="height:450px;width:100%">
+        <div></div>
+    </div>
+
+    <div class="container" style="background-color:black ; height:650px ; margin-top:2%" >
+        <h1 class="text-center text-white">----------| TOP JOBS |----------</h1>
+
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <img src="{% static 'images/logo1.png' %}" style="width=100% ; margin-top:5% ; height:200px ; border-radius:50%">
+                    <div class="content" style="height:30px ; width:91%">
+                        <p>JOB1</p>
+                    </div>
+                </div>
+            </div>   
+    </div>
+
+{% include 'app/footer.html'%}
+{% endblock %}

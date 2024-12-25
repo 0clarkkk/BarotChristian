@@ -1,0 +1,23 @@
+MIDTERM LABORATORY | CRUD OPERATION
+
+USER
+* user can login and create an account
+
+
+RECRUITER
+* recruiter can login and create an account
+* add a job
+* view the list of jobs to manage
+* update or change the specific job 
+
+
+ADMIN 
+admin user: chan
+admin pass: asdasd11!
+
+* admin can login with the new interface
+* admin can action the new recruiters signing up pendings to reject/accept
+* admin can manage all seekers and recruiters
+
+
+THEY CAN CHANGE THEIR PASSWORD
