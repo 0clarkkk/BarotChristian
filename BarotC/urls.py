@@ -30,6 +30,17 @@ urlpatterns = [
     path('add_job', add_job, name="add_job"),
     path('job_list', job_list, name="job_list"),
     path('edit_jobdetail/<int:pid>', edit_jobdetail, name="edit_jobdetail"),
+    path('change_companylogo/<int:pid>', change_companylogo, name="change_companylogo"),
+    path('latest_jobs', latest_jobs, name="latest_jobs"),
+    path('user_latestjobs', user_latestjobs, name="user_latestjobs"),
+    path('job_detail/<int:pid>', job_detail, name="job_detail"),
+    path('applyforjob/<int:pid>', applyforjob, name="applyforjob"),
+    path('applied_candidatelist', applied_candidatelist, name="applied_candidatelist"),
+    path('contact', contact, name="contact"),
+    
+
+
+
 
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

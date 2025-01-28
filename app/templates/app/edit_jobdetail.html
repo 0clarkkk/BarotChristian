@@ -39,7 +39,7 @@
         </div>
 
         <div class="form-group col-md-6">
-           <img src="{{job.image.url}}" width="120" height="90"> <a href=""> Change Company Logo </a>
+           <img src="{{job.image.url}}" width="120" height="90"> <a href="{% url 'change_companylogo' job.id %}"> Change Company Logo </a>
         </div>
     </div>
 
@@ -76,7 +76,7 @@
     <input type="submit" value="Submit" class="btn btn-primary my-3" style="width:200px ; ">    
 </form>
 
-{% include 'app/footer.html' %}
+
 
 {% if error == "no" %}
 <script>

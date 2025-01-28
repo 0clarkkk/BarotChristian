@@ -93,7 +93,42 @@ def recruiter_signup(request):
 def user_home(request):
     if not request.user.is_authenticated:
         return redirect('user_login')
-    return render(request, 'app/user_home.html')
+    
+    user = request.user
+    seeker = SUser.objects.get(user=user)
+    error = ""
+
+    if request.method == 'POST':
+        f = request.POST['fname']
+        l = request.POST['lname']
+        con = request.POST['contact']
+        gen = request.POST['gender']
+
+    
+        seeker.user.first_name = f
+        seeker.user.last_name = l
+        seeker.mobile = con
+        seeker.gender = gen
+
+        try:
+            seeker.user.save() 
+            seeker.save()       
+            error = "no"
+        except Exception as e:
+            print(e)  
+            error = "yes"
+
+
+        if 'image' in request.FILES:
+            try:
+                i = request.FILES['image']
+                seeker.image = i
+                seeker.save()
+            except Exception as e:
+                print(e) 
+
+    d = {'seeker': seeker, 'error': error}
+    return render(request, 'app/user_home.html', d)
 
 def Logout(request):
     logout(request)
@@ -102,12 +137,51 @@ def Logout(request):
 def admin_home(request):
     if not request.user.is_authenticated:
         return redirect('admin_login')
-    return render(request, 'app/admin_home.html')
+    rcount = Recruiter.objects.all().count()
+    scount = SUser.objects.all().count()
+    d = {'rcount': rcount, 'scount': scount}
+    return render(request, 'app/admin_home.html', d)
 
 def recruiter_home(request):
     if not request.user.is_authenticated:
         return redirect('recruiter_login')
-    return render(request, 'app/recruiter_home.html')
+
+    user = request.user
+    recruiter = Recruiter.objects.get(user=user)
+    error = ""
+
+    if request.method == 'POST':
+        f = request.POST['fname']
+        l = request.POST['lname']
+        con = request.POST['contact']
+        gen = request.POST['gender']
+
+    
+        recruiter.user.first_name = f
+        recruiter.user.last_name = l
+        recruiter.mobile = con
+        recruiter.gender = gen
+
+        try:
+            recruiter.user.save() 
+            recruiter.save()       
+            error = "no"
+        except Exception as e:
+            print(e)  
+            error = "yes"
+
+
+        if 'image' in request.FILES:
+            try:
+                i = request.FILES['image']
+                recruiter.image = i
+                recruiter.save()
+            except Exception as e:
+                print(e) 
+
+    d = {'recruiter': recruiter, 'error': error}
+    return render(request, 'app/recruiter_home.html', d)
+
 
 
 def user_signup(request):
@@ -136,6 +210,36 @@ def view_users(request):
     data = SUser.objects.all()
     d = {'data': data}
     return render(request, 'app/view_users.html', d)
+
+def latest_jobs(request):
+    job = Job.objects.all().order_by('-start_date')
+    d = {'job': job}
+    return render(request, 'app/latest_jobs.html', d)
+
+
+
+def user_latestjobs(request):
+    job = Job.objects.all().order_by('-start_date')
+    user = request.user
+    try:
+        seeker = SUser.objects.get(user=user)
+    except SUser.DoesNotExist:
+        seeker = None
+    li = []
+    if seeker:
+        applied_jobs = Apply.objects.filter(suser=seeker)
+        li = [apply.job.id for apply in applied_jobs]
+
+
+    d = {'job': job, 'li': li}
+    return render(request, 'app/user_latestjobs.html', d)
+
+def job_detail(request, pid):
+    job = Job.objects.get(id=pid)
+    d = {'job': job,}
+    return render(request, 'app/job_detail.html', d)
+
+
 
 
 def delete_user(request, pid):
@@ -355,8 +459,55 @@ def edit_jobdetail(request, pid):
     return render(request, 'app/edit_jobdetail.html', d)
 
 
+def change_companylogo(request, pid):
+    if not request.user.is_authenticated:
+        return redirect('recruiter_login')
+    error=""
+    job = Job.objects.get(id=pid)
+    if request.method == 'POST':
+        cl = request.FILES['logo']
+   
+        job.image = cl
+        
+                
+        try:
+            job.save()
+            error="no"
+        except:
+            error="yes"  
+    d = {'error': error, 'job': job}
+    return render(request, 'app/change_companylogo.html', d)
 
+def applyforjob(request, pid):
+    if not request.user.is_authenticated:
+        return redirect('user_login')
+    error=""
+    user = request.user
+    seeker = SUser.objects.get(user=user)
+    job = Job.objects.get(id=pid)
+    date1 = date.today()
+    if job.end_date < date1:
+        error = "close"
+    elif job.start_date > date1:
+        error = "notopen"
+    else:
+        if request.method == 'POST':
+            r = request.FILES['resume']
+            Apply.objects.create(job=job, suser=seeker, resume=r, applydate=date.today())
+            error="done"
+    d = {'error': error}
+    return render(request, 'app/applyforjob.html', d)
 
+def applied_candidatelist(request):
+    if not request.user.is_authenticated:
+        return redirect('recruiter_login')
+    data = Apply.objects.all()
+   
+    d = {'data': data}
+    return render(request, 'app/applied_candidatelist.html', d)
+
+def contact(request):
+    return render(request, 'app/contact.html')
 
 
 
